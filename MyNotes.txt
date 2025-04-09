@@ -1,0 +1,46 @@
+# Server Travelling
+PuzzlePlatformsGameInstance
+- Host()
+* Get UWorld
+* ensure null check UWorld pointer
+* Call ServerTravel with an url -> "/Game/ThirdPersonCPP/Maps/ThirdPersonExampleMap" It needs where's the map.
+* Add ?listen to the url -> "/Game/ThirdPersonCPP/Maps/ThirdPersonExampleMap?listen"
+
+
+# Open a new instance of the game in standalone
+* Locate the uproject.
+* Add the ip and -game -log parameters
+Ex: 192.168.1.90 -game -log
+* It will connect to a listen server in the editor.
+There's an error the loaded player is not visible. Due the unsaved map.
+Solution: Save the map to match both standalone and editor settings.
+
+
+# Console Commands With Exec
+- Implement cheats and fast commands
+- Escape key
+UEngine* Engine = GetEngine();
+if(!ensure) -> Check if Engine is not nullptr.
+For printing on screen: Engine->AddOnScreenDebugMessage().
+UFUNCTION(Exec) over the function to make the console command.
+
+
+# Client Travel
+Operates on a player controller level. Connects to a server
+Join function
+* APlayerController instance -> GetFirstLocalPlayerController();
+* Nullcheck using ensure.
+* PlayerController->ClientTravel(Addressm ETravelType::TRAVEL_Absolute);
+
+
+# Sharing the game on Itch.io
+* Building the game.
+Package project and select the platform.
+Have an account.
+Upload it.
+
+==================================================================
+# Advanced UMG Widget Layout #
+Containers -> Vertical and Horizontal box, layout.
+Size boxes -> Child layout: reposition certain size and aspect ratio.
+Overlay -> Which things overlays other in the group.
