@@ -39,8 +39,12 @@ Package project and select the platform.
 Have an account.
 Upload it.
 
+
 ==================================================================
 # Advanced UMG Widget Layout #
 Containers -> Vertical and Horizontal box, layout.
 Size boxes -> Child layout: reposition certain size and aspect ratio.
 Overlay -> Which things overlays other in the group.
+
+
+==================================================================
