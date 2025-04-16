@@ -32,6 +32,6 @@ public:
 	void LoadMenu();
 
 private:
-	TSubclassOf<UUserWidget> MenuClass;
-	
+	TSubclassOf<UUserWidget> MenuClass;	
+	class UMainMenu* Menu;
 };
