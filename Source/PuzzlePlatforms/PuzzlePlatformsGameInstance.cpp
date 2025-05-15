@@ -65,4 +65,5 @@ void UPuzzlePlatformsGameInstance::LoadMenu()
 	if (!ensure(Menu != nullptr)) return;
 
 	Menu->SetMenuInterface(this);
+	Menu->Setup();
 }

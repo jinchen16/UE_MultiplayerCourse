@@ -30,7 +30,7 @@ void UMainMenu::Setup()
 
 void UMainMenu::Terminate()
 {
-    this->RemoveFromViewport();
+    this->RemoveFromParent();
 
     UWorld* World = GetWorld();
     if (!ensure(World != nullptr)) return;
@@ -51,8 +51,14 @@ bool UMainMenu::Initialize()
 
     if (!bSuccess) return false;
 
-    if (!ensure(Host != nullptr)) return false;    
-    Host->OnClicked.AddDynamic(this, &UMainMenu::HostServer);
+    if (!ensure(Host_Button != nullptr)) return false;    
+    Host_Button->OnClicked.AddDynamic(this, &UMainMenu::HostServer);
+
+    if (!ensure(Join_Button != nullptr)) return false;
+    Join_Button->OnClicked.AddDynamic(this, &UMainMenu::OpenJoinMenu);
+
+    if (!ensure(Cancel_JoinMenu_Button != nullptr)) return false;
+    Cancel_JoinMenu_Button->OnClicked.AddDynamic(this, &UMainMenu::OpenMainMenu);
 
     return true;
 }
@@ -63,4 +69,20 @@ void UMainMenu::HostServer()
     {
         Menu_Interface->Host();
     }    
+}
+
+void UMainMenu::OpenJoinMenu()
+{
+    if (!ensure(MenuSwitcher != nullptr)) return;
+    if (!ensure(JoinMenu != nullptr)) return;
+
+    MenuSwitcher->SetActiveWidget(JoinMenu);
+}
+
+void UMainMenu::OpenMainMenu()
+{
+    if (!ensure(MenuSwitcher != nullptr)) return;
+    if (!ensure(MainMenu != nullptr)) return;
+
+    MenuSwitcher->SetActiveWidget(MainMenu);
 }
