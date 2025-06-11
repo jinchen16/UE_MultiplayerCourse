@@ -48,3 +48,11 @@ Overlay -> Which things overlays other in the group.
 
 
 ==================================================================
+UEditableTextBox => Add it to the reference.
+BindWidget and change the name.
+Bind the second join button.
+Set the join as an interface function. Remember = 0 is pure virtual.
+
+JoinServer
+const FString& Address = IPAddressField->GetText().ToString();
+Passed to Join.

@@ -6,6 +6,7 @@
 #include "Blueprint/UserWidget.h"
 #include "Components/Button.h"
 #include "Components/WidgetSwitcher.h"
+#include "Components/EditableTextBox.h"
 #include "MenuInterface.h"
 #include "MainMenu.generated.h"
 
@@ -36,6 +37,12 @@ private:
 
 	UPROPERTY(meta = (BindWidget))
 	TObjectPtr<UButton> Cancel_JoinMenu_Button;
+
+	UPROPERTY(meta = (BindWidget))
+	TObjectPtr<UButton> Join_Session_Button;
+
+	UPROPERTY(meta = (BindWidget))
+	TObjectPtr<UEditableTextBox> IPAddressField;
 
 	UPROPERTY(meta = (BindWidget))
 	TObjectPtr<UWidgetSwitcher> MenuSwitcher;
