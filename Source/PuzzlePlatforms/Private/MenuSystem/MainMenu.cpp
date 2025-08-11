@@ -3,47 +3,7 @@
 
 #include "MenuSystem/MainMenu.h"
 #include "Components/Button.h"
-#include "MenuSystem/MenuInterface.h"
-
-void UMainMenu::SetMenuInterface(IMenuInterface* MenuInterface)
-{
-    this->Menu_Interface = MenuInterface;
-}
-
-void UMainMenu::Setup()
-{
-    this->AddToViewport();
-
-    UWorld* World = GetWorld();
-    if (!ensure(World != nullptr)) return;
-
-    APlayerController* PlayerController = World->GetFirstPlayerController();
-    if (!ensure(PlayerController != nullptr)) return;
-
-    FInputModeUIOnly InputMode;
-    InputMode.SetWidgetToFocus(this->TakeWidget());
-    InputMode.SetLockMouseToViewportBehavior(EMouseLockMode::DoNotLock);;
-    PlayerController->SetInputMode(InputMode);
-
-    PlayerController->bShowMouseCursor = true;
-}
-
-void UMainMenu::Terminate()
-{
-    this->RemoveFromParent();
-
-    UWorld* World = GetWorld();
-    if (!ensure(World != nullptr)) return;
-
-    APlayerController* PlayerController = World->GetFirstPlayerController();
-    if (!ensure(PlayerController != nullptr)) return;
-
-    // This set back to the normal gameplay input exiting only UI mode
-    FInputModeGameOnly InputMode;    
-    PlayerController->SetInputMode(InputMode);
-
-    PlayerController->bShowMouseCursor = false;
-}
+#include "GameFramework/PlayerController.h"
 
 bool UMainMenu::Initialize()
 {
@@ -56,6 +16,9 @@ bool UMainMenu::Initialize()
 
     if (!ensure(Join_Button != nullptr)) return false;
     Join_Button->OnClicked.AddDynamic(this, &UMainMenu::OpenJoinMenu);
+
+    if (!ensure(Exit_Button != nullptr)) return false;
+    Exit_Button->OnClicked.AddDynamic(this, &UMainMenu::QuitGame);
 
     if (!ensure(Cancel_JoinMenu_Button != nullptr)) return false;
     Cancel_JoinMenu_Button->OnClicked.AddDynamic(this, &UMainMenu::OpenMainMenu);
@@ -85,4 +48,26 @@ void UMainMenu::OpenMainMenu()
     if (!ensure(MainMenu != nullptr)) return;
 
     MenuSwitcher->SetActiveWidget(MainMenu);
+}
+
+void UMainMenu::JoinServer()
+{
+    if (Menu_Interface != nullptr)
+    {
+        if (!ensure(IPAddressField != nullptr)) return;
+
+        const FString& Address = IPAddressField->GetText().ToString();
+        Menu_Interface->Join(Address);
+    }
+}
+
+void UMainMenu::QuitGame()
+{
+    UWorld* World = GetWorld();
+    if (!ensure(World != nullptr)) return;
+
+    APlayerController* PlayerController = World->GetFirstPlayerController();
+    if (!ensure(PlayerController != nullptr)) return;
+
+    PlayerController->ConsoleCommand("quit");
 }
