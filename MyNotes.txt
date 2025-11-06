@@ -56,3 +56,34 @@ Set the join as an interface function. Remember = 0 is pure virtual.
 JoinServer
 const FString& Address = IPAddressField->GetText().ToString();
 Passed to Join.
+
+
+==================================================================
+Enable the STEAM plugin
+Online Subsystem Steam -> Enable it
+.Build.cs
+OnlineSubsystemSteam
+
+DefaultEngine.ini
+= From NULL to Steam
+Copy and paste what it's needed.
+
+480 is the APP ID free that can be used. Have to pay for the right one
+https://dev.epicgames.com/documentation/en-us/unreal-engine/online-subsystem-steam-interface-in-unreal-engine?application_version=5.6
+
+Have to check outside of the editor.
+Powershell or command prompt
+
+Steam running and logged in
+#On MAC it's a different issue#
+* Build the project.
+* And add a non steam game.
+* Add the built game.
+* For checking the log, look for the console.
+
+#ON PC#
+On the commandline:
+*Find the path to t he .uproject
+-> -game -log
+On the build, press key and set 
+Log LogOnline VeryVerbose
