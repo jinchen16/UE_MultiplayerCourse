@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
-#include "MenuInterface.h"
+#include "MenuSystem/MenuInterface.h"
 #include "MenuWidget.generated.h"
 
 /**

@@ -10,6 +10,8 @@
 #include "Components/ScrollBox.h"
 #include "MainMenu.generated.h"
 
+class UUServerRow;
+
 /**
  *
  */
@@ -18,10 +20,20 @@ class PUZZLEPLATFORMS_API UMainMenu : public UMenuWidget
 {
 	GENERATED_BODY()
 
+	UMainMenu();
+
+public:
+	UFUNCTION()
+	void SetServerList(TArray<FString> ServerNames);
+
+	void SelectIndex(uint32 Index);
+
 protected:
 	virtual bool Initialize();
 
 private:
+	TSubclassOf<UUServerRow> ServerRowClass;
+
 	UPROPERTY(meta = (BindWidget))
 	TObjectPtr<UButton> Host_Button;
 
@@ -38,7 +50,7 @@ private:
 	TObjectPtr<UButton> Join_Session_Button;
 
 	UPROPERTY(meta = (BindWidget))
-	TObjectPtr<UScrollBox> ServerListScrollBox;
+	TObjectPtr<UScrollBox> SB_ServerList;
 
 	UPROPERTY(meta = (BindWidget))
 	TObjectPtr<UWidgetSwitcher> MenuSwitcher;
@@ -64,6 +76,5 @@ private:
 	UFUNCTION()
 	void QuitGame();
 
-	UFUNCTION()
-	void SetServerList(TArray<FString> ServerNames);
+	TOptional<uint32> SelectedIndex;
 };

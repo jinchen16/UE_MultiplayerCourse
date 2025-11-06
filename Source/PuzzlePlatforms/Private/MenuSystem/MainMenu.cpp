@@ -3,85 +3,110 @@
 
 #include "MenuSystem/MainMenu.h"
 #include "Components/Button.h"
+#include "MenuSystem/UServerRow.h"
 #include "GameFramework/PlayerController.h"
+
+UMainMenu::UMainMenu()
+{
+	ConstructorHelpers::FClassFinder<UUServerRow> ServerRowBPClass(TEXT("/Game/PuzzlePlatforms/MenuSystem/WBP_ServerName"));
+	if (!ensure(ServerRowBPClass.Class != nullptr)) return;
+
+	ServerRowClass = ServerRowBPClass.Class;
+}
 
 bool UMainMenu::Initialize()
 {
-    bool bSuccess = Super::Initialize();
+	bool bSuccess = Super::Initialize();
 
-    if (!bSuccess) return false;
+	if (!bSuccess) return false;
 
-    if (!ensure(Host_Button != nullptr)) return false;    
-    Host_Button->OnClicked.AddDynamic(this, &UMainMenu::HostServer);
+	if (!ensure(Host_Button != nullptr)) return false;
+	Host_Button->OnClicked.AddDynamic(this, &UMainMenu::HostServer);
 
-    if (!ensure(Join_Button != nullptr)) return false;
-    Join_Button->OnClicked.AddDynamic(this, &UMainMenu::OpenJoinMenu);
+	if (!ensure(Join_Button != nullptr)) return false;
+	Join_Button->OnClicked.AddDynamic(this, &UMainMenu::OpenJoinMenu);
 
-    if (!ensure(Exit_Button != nullptr)) return false;
-    Exit_Button->OnClicked.AddDynamic(this, &UMainMenu::QuitGame);
+	if (!ensure(Exit_Button != nullptr)) return false;
+	Exit_Button->OnClicked.AddDynamic(this, &UMainMenu::QuitGame);
 
-    if (!ensure(Cancel_JoinMenu_Button != nullptr)) return false;
-    Cancel_JoinMenu_Button->OnClicked.AddDynamic(this, &UMainMenu::OpenMainMenu);
+	if (!ensure(Cancel_JoinMenu_Button != nullptr)) return false;
+	Cancel_JoinMenu_Button->OnClicked.AddDynamic(this, &UMainMenu::OpenMainMenu);
 
-    return true;
+	return true;
 }
 
 void UMainMenu::HostServer()
 {
-    if (Menu_Interface != nullptr)
-    {
-        Menu_Interface->Host();
-    }    
+	if (Menu_Interface != nullptr)
+	{
+		Menu_Interface->Host();
+	}
 }
 
 void UMainMenu::OpenJoinMenu()
 {
-    if (!ensure(MenuSwitcher != nullptr)) return;
-    if (!ensure(JoinMenu != nullptr)) return;
+	if (!ensure(MenuSwitcher != nullptr)) return;
+	if (!ensure(JoinMenu != nullptr)) return;
 
-    MenuSwitcher->SetActiveWidget(JoinMenu);
+	MenuSwitcher->SetActiveWidget(JoinMenu);
+
+	if (Menu_Interface != nullptr)
+	{
+		Menu_Interface->RefreshServerList();
+	}
 }
 
 void UMainMenu::OpenMainMenu()
 {
-    if (!ensure(MenuSwitcher != nullptr)) return;
-    if (!ensure(MainMenu != nullptr)) return;
+	if (!ensure(MenuSwitcher != nullptr)) return;
+	if (!ensure(MainMenu != nullptr)) return;
 
-    MenuSwitcher->SetActiveWidget(MainMenu);
+	MenuSwitcher->SetActiveWidget(MainMenu);
 }
 
 void UMainMenu::JoinServer()
 {
-    //if (Menu_Interface != nullptr)
-    //{
-    //    if (!ensure(IPAddressField != nullptr)) return;
-
-    //    const FString& Address = IPAddressField->GetText().ToString();
-    //    Menu_Interface->Join(Address);
-    //}
+	if (Menu_Interface != nullptr && SelectedIndex.IsSet())
+	{
+		//if (!ensure(IPAddressField != nullptr)) return;
+		//const FString& Address = IPAddressField->GetText().ToString();
+		Menu_Interface->Join(SelectedIndex.GetValue());
+	}
 }
 
 void UMainMenu::QuitGame()
 {
-    UWorld* World = GetWorld();
-    if (!ensure(World != nullptr)) return;
+	UWorld* World = GetWorld();
+	if (!ensure(World != nullptr)) return;
 
-    APlayerController* PlayerController = World->GetFirstPlayerController();
-    if (!ensure(PlayerController != nullptr)) return;
+	APlayerController* PlayerController = World->GetFirstPlayerController();
+	if (!ensure(PlayerController != nullptr)) return;
 
-    PlayerController->ConsoleCommand("quit");
+	PlayerController->ConsoleCommand("quit");
 }
 
 void UMainMenu::SetServerList(TArray<FString> ServerNames)
 {
-    UWorld* World = this->GetWorld();
+	UWorld* World = this->GetWorld();
 
-    if (!ensure(World != nullptr)) return;
+	if (!ensure(World != nullptr)) return;
 
-    ServerListScrollBox->ClearChildren();
+	SB_ServerList->ClearChildren();
 
-    for (const FString& ServerName : ServerNames)
-    {
-        
-    }
+	uint32 index = 0;
+	for (const FString& ServerName : ServerNames)
+	{
+		UUServerRow* Row = CreateWidget<UUServerRow>(World, ServerRowClass);
+		if (!ensure(Row != nullptr)) return;
+
+		Row->ServerName->SetText(FText::FromString(ServerName));
+		Row->Setup(this, index);
+		++index;
+		SB_ServerList->AddChild(Row);
+	}
+}
+
+void UMainMenu::SelectIndex(uint32 Index)
+{
+	SelectedIndex = Index;
 }
