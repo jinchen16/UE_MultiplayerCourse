@@ -7,6 +7,7 @@
 #include "Components/Button.h"
 #include "Components/WidgetSwitcher.h"
 #include "Components/EditableTextBox.h"
+#include "Components/ScrollBox.h"
 #include "MainMenu.generated.h"
 
 /**
@@ -37,7 +38,7 @@ private:
 	TObjectPtr<UButton> Join_Session_Button;
 
 	UPROPERTY(meta = (BindWidget))
-	TObjectPtr<UEditableTextBox> IPAddressField;
+	TObjectPtr<UScrollBox> ServerListScrollBox;
 
 	UPROPERTY(meta = (BindWidget))
 	TObjectPtr<UWidgetSwitcher> MenuSwitcher;
@@ -62,4 +63,7 @@ private:
 
 	UFUNCTION()
 	void QuitGame();
+
+	UFUNCTION()
+	void SetServerList(TArray<FString> ServerNames);
 };

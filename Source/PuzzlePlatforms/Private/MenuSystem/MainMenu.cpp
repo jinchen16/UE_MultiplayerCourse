@@ -52,13 +52,13 @@ void UMainMenu::OpenMainMenu()
 
 void UMainMenu::JoinServer()
 {
-    if (Menu_Interface != nullptr)
-    {
-        if (!ensure(IPAddressField != nullptr)) return;
+    //if (Menu_Interface != nullptr)
+    //{
+    //    if (!ensure(IPAddressField != nullptr)) return;
 
-        const FString& Address = IPAddressField->GetText().ToString();
-        Menu_Interface->Join(Address);
-    }
+    //    const FString& Address = IPAddressField->GetText().ToString();
+    //    Menu_Interface->Join(Address);
+    //}
 }
 
 void UMainMenu::QuitGame()
@@ -70,4 +70,18 @@ void UMainMenu::QuitGame()
     if (!ensure(PlayerController != nullptr)) return;
 
     PlayerController->ConsoleCommand("quit");
+}
+
+void UMainMenu::SetServerList(TArray<FString> ServerNames)
+{
+    UWorld* World = this->GetWorld();
+
+    if (!ensure(World != nullptr)) return;
+
+    ServerListScrollBox->ClearChildren();
+
+    for (const FString& ServerName : ServerNames)
+    {
+        
+    }
 }
