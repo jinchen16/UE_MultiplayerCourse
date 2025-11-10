@@ -19,6 +19,12 @@ class UUServerRow : public UUserWidget
 public:
 	UPROPERTY(meta = (BindWidget))
 	TObjectPtr<UTextBlock> ServerName;
+	
+	UPROPERTY(meta = (BindWidget))
+	TObjectPtr<UTextBlock> HostUsername;
+	
+	UPROPERTY(meta = (BindWidget))
+	TObjectPtr<UTextBlock> PlayerQuantity;
 
 	UPROPERTY()
 	class UMainMenu* Parent;
@@ -26,6 +32,9 @@ public:
 	uint32 Index;
 
 	void Setup(class UMainMenu* IN_Parent, uint32 IN_Index);
+
+	UPROPERTY(BlueprintReadOnly)
+	bool Selected = false;
 
 private:
 	UPROPERTY(meta = (BindWidget))

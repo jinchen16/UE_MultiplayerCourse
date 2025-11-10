@@ -3,6 +3,7 @@
 
 #include "MenuSystem/MenuWidget.h"
 #include "MenuSystem/MenuInterface.h"
+#include "GameFramework/PlayerController.h"
 
 void UMenuWidget::SetMenuInterface(IMenuInterface* MenuInterface)
 {
@@ -13,7 +14,7 @@ void UMenuWidget::Setup()
 {
     this->AddToViewport();
 
-    UWorld* World = GetWorld();
+    UWorld* World = this->GetWorld();
     if (!ensure(World != nullptr)) return;
 
     APlayerController* PlayerController = World->GetFirstPlayerController();
@@ -31,7 +32,7 @@ void UMenuWidget::Terminate()
 {
     this->RemoveFromParent();
 
-    UWorld* World = GetWorld();
+    UWorld* World = this->GetWorld();
     if (!ensure(World != nullptr)) return;
 
     APlayerController* PlayerController = World->GetFirstPlayerController();

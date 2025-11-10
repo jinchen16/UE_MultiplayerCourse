@@ -2,9 +2,17 @@
 
 
 #include "MenuSystem/MainMenu.h"
-#include "Components/Button.h"
 #include "MenuSystem/UServerRow.h"
+
 #include "GameFramework/PlayerController.h"
+
+#include "Components/Button.h"
+#include "Components/WidgetSwitcher.h"
+#include "Components/EditableTextBox.h"
+#include "Components/TextBlock.h"
+#include "Components/ScrollBox.h"
+
+#include "UObject/ConstructorHelpers.h"
 
 UMainMenu::UMainMenu()
 {
@@ -85,7 +93,7 @@ void UMainMenu::QuitGame()
 	PlayerController->ConsoleCommand("quit");
 }
 
-void UMainMenu::SetServerList(TArray<FString> ServerNames)
+void UMainMenu::SetServerList(TArray<FServerData> ServerNames)
 {
 	UWorld* World = this->GetWorld();
 
@@ -94,13 +102,17 @@ void UMainMenu::SetServerList(TArray<FString> ServerNames)
 	SB_ServerList->ClearChildren();
 
 	uint32 index = 0;
-	for (const FString& ServerName : ServerNames)
+	for (const FServerData& ServerData : ServerNames)
 	{
 		UUServerRow* Row = CreateWidget<UUServerRow>(World, ServerRowClass);
 		if (!ensure(Row != nullptr)) return;
 
-		Row->ServerName->SetText(FText::FromString(ServerName));
+		Row->ServerName->SetText(FText::FromString(ServerData.Name));
+		Row->HostUsername->SetText(FText::FromString(ServerData.HostUsername));
+		FString TextToDisplay = FString::Printf(TEXT("%d/%d"), ServerData.CurrentPlayers, ServerData.MaxPlayers);
+		Row->PlayerQuantity->SetText(FText::FromString(TextToDisplay));
 		Row->Setup(this, index);
+		
 		++index;
 		SB_ServerList->AddChild(Row);
 	}
@@ -109,4 +121,18 @@ void UMainMenu::SetServerList(TArray<FString> ServerNames)
 void UMainMenu::SelectIndex(uint32 Index)
 {
 	SelectedIndex = Index;
+	UpdateChildren();
+	UE_LOG(LogTemp, Warning, TEXT("Selection Index %d"), Index);
+}
+
+void UMainMenu::UpdateChildren() 
+{
+	for (int32 i = 0; i < SB_ServerList->GetChildrenCount(); i++)
+	{
+		UUServerRow* Row = Cast<UUServerRow>(SB_ServerList->GetChildAt(i));
+		if (Row != nullptr)
+		{
+			Row->Selected = SelectedIndex.IsSet() && SelectedIndex.GetValue() == i;
+		}
+	}
 }

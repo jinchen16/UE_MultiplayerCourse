@@ -4,13 +4,20 @@
 
 #include "CoreMinimal.h"
 #include "MenuSystem/MenuWidget.h"
-#include "Components/Button.h"
-#include "Components/WidgetSwitcher.h"
-#include "Components/EditableTextBox.h"
-#include "Components/ScrollBox.h"
 #include "MainMenu.generated.h"
 
 class UUServerRow;
+
+USTRUCT()
+struct FServerData
+{
+	GENERATED_BODY()
+
+	FString Name;
+	uint16 CurrentPlayers;
+	uint16 MaxPlayers;
+	FString HostUsername;
+};
 
 /**
  *
@@ -24,7 +31,7 @@ class PUZZLEPLATFORMS_API UMainMenu : public UMenuWidget
 
 public:
 	UFUNCTION()
-	void SetServerList(TArray<FString> ServerNames);
+	void SetServerList(TArray<FServerData> ServerNames);
 
 	void SelectIndex(uint32 Index);
 
@@ -35,25 +42,25 @@ private:
 	TSubclassOf<UUServerRow> ServerRowClass;
 
 	UPROPERTY(meta = (BindWidget))
-	TObjectPtr<UButton> Host_Button;
+	TObjectPtr<class UButton> Host_Button;
 
 	UPROPERTY(meta = (BindWidget))
-	TObjectPtr<UButton> Join_Button;
+	TObjectPtr<class UButton> Join_Button;
 
 	UPROPERTY(meta = (BindWidget))
-	TObjectPtr<UButton>	Exit_Button;
+	TObjectPtr<class UButton>	Exit_Button;
 
 	UPROPERTY(meta = (BindWidget))
-	TObjectPtr<UButton> Cancel_JoinMenu_Button;
+	TObjectPtr<class UButton> Cancel_JoinMenu_Button;
 
 	UPROPERTY(meta = (BindWidget))
-	TObjectPtr<UButton> Join_Session_Button;
+	TObjectPtr<class UButton> Join_Session_Button;
 
 	UPROPERTY(meta = (BindWidget))
-	TObjectPtr<UScrollBox> SB_ServerList;
+	TObjectPtr<class UScrollBox> SB_ServerList;
 
 	UPROPERTY(meta = (BindWidget))
-	TObjectPtr<UWidgetSwitcher> MenuSwitcher;
+	TObjectPtr<class UWidgetSwitcher> MenuSwitcher;
 
 	UPROPERTY(meta = (BindWidget))
 	TObjectPtr<UWidget> JoinMenu;
@@ -77,4 +84,6 @@ private:
 	void QuitGame();
 
 	TOptional<uint32> SelectedIndex;
+
+	void UpdateChildren();
 };

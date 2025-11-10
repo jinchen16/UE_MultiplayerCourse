@@ -87,3 +87,7 @@ On the commandline:
 -> -game -log
 On the build, press key and set 
 Log LogOnline VeryVerbose
+
+
+= NO STEAM TEST
+-game -log -nosteam

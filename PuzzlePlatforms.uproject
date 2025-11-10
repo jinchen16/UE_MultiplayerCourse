@@ -18,6 +18,10 @@
 		{
 			"Name": "XRBase",
 			"Enabled": true
+		},
+		{
+			"Name": "OnlineSubsystemSteam",
+			"Enabled": true
 		}
 	]
 }
