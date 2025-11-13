@@ -91,3 +91,79 @@ Log LogOnline VeryVerbose
 
 = NO STEAM TEST
 -game -log -nosteam
+
+
+==================================================================
+-> GameMode
+It's only on the server.
+
+-> GameInstance
+Check where's the spawning done.
+Instead of traveling to the map, select the lobby.
+
+-> Game class for the lobby
+Create a class calle LobbyGameMode based on the custom game mode.
+Custom Game Mode has a constructor defined and initializing the default pawn class.
+Ex:
+APuzzlePLatformsGameMode::APuzzlePLatformsGameMode()
+{
+    static CosntructorHelpers::FClassFinder<APawn> PlayerPawnBPClass(TEXT("pawn-route"));
+    if(PlayerPawnBPClass.Class != null)
+    {
+        DefaultPawnClass = PlayerPawnBPClass.Class;
+    }
+}
+
+LobbyGameMode.h
+-> override the PostLogin function and Logout
+
+public:
+    virtual void PostLogin(APlayerController* NewPlayer) override;
+    virtual void Logout(AController* Exiting) override;
+
+private:
+    uint32 NumberOfPlayers = 0;
+
+LobbyGameMode.cpp
+
+void ALobbyGameMode::PostLogin(APlayerController* NewPlayer)
+{
+    Super::PostLogin(NewPlayer);
+    NumberOfPlayers++;
+
+    if(NumberOfPlayers >= 3)
+    {
+        UWorld* World = GetWorld();
+        if(ensure(World != nullptr)) return;
+
+        bUseSeamlessTravel = true;
+        World->ServerTravel("Destination_Path?listen");
+    }
+}
+
+void ALobbyGameMode::Logout(AController* Exiting) 
+{
+    Super::Logout(Exiting);
+    NumberOfPlayers--;
+}
+
+
+==================================================================
+NOTE:
+Non-seamless
+-> Joining a map to disconnect and connect.
+
+Seamless
+-> Moving everybody to a transition map.
+-> Have a map loaded. 
+-> Transition first to a small map. Like a loading screen.
+-> Both maps loaded.
+By Default there's a transition map.
+
+# Adding a transition map #
+Create a Widget loading and add some text.
+Seamless is not supported in editor, have to run game instances. (UE4) Don't know if that would be the case for UE5
+
+
+==================================================================
+Check if editor symbols is added
