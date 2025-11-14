@@ -94,6 +94,75 @@ Log LogOnline VeryVerbose
 
 
 ==================================================================
+Layout the text
+Clipping on the text: - Set it to clip to bounds
+Have a BP header boolean to check if the row instance ios header
+
+
+==================================================================
+Custom Session settings
+(FOnlineSessionSettings)
+---> On Init
+SessionSettings.Set(TEXT("Test"), FString("Hello"), EOnlineDataAdvertisementType::ViaOnlineServiceAndPing);
+
+---> On the callback OnFindSessionsComplete
+FString Data;
+if(SearchResult.Session.SessionSettings.Get(TEXT("Test"), Data))
+{
+    UE_LOG(LogTemp, Warning, TEXT("Data found in settings %s"), *Data); 
+}
+else
+{
+    UE_LOG(LogTemp, Warning, TEXT("Didn't get expected data")); 
+}
+
+---> Editor side
+* Model the UI from joining the session.
+* Making work for the hosted session.
+* Grab the same order on the main menu and create the host menu
+
+---> Interface 
+Host(FString ServerName)
+Set the new function in all the missing places
+
+---> PuzzlePlatformsGameInstance
+Declare FString DesiredServerName; 
+And change all the placeholder FString with the DesiredServerName
+
+Create a const key and pass it to all the set and get of the SessionSettings
+
+if(SearchResult.Session.SessionSettings.Get(SERVER_NAME_SETTINGS_KEY, Data))
+{
+    Data.Name = ServerName
+}
+else
+{
+    Data.Name = "Could not find server name";
+}
+
+* Bind the host menu on MainMenu
+* Bind text box and Buttons  
+ 
+New functions
+- OpenHostMenu()
+
+void UMainMenu::OpenHostMenu()
+{
+    // MenuSwitcher to the host menu
+}
+
+Declare a BindWidget
+UEditableTextBox* ServerHostName;
+UButton* ConfirmHostMenuButton;
+UButton* CancelHostMenuButton;
+
+// Add buttons callback
+CancelHostMenuButton same as OpenMainMenu
+ConfirmHostMenuButton -> HostServer -> Get the ServerHostName text and we pass it to the MenuInterface->Host(ServerName);
+
+
+==================================================================
+GameMode and Lobby
 -> GameMode
 It's only on the server.
 
@@ -163,7 +232,3 @@ By Default there's a transition map.
 # Adding a transition map #
 Create a Widget loading and add some text.
 Seamless is not supported in editor, have to run game instances. (UE4) Don't know if that would be the case for UE5
-
-
-==================================================================
-Check if editor symbols is added
