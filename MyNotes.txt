@@ -232,3 +232,41 @@ By Default there's a transition map.
 # Adding a transition map #
 Create a Widget loading and add some text.
 Seamless is not supported in editor, have to run game instances. (UE4) Don't know if that would be the case for UE5
+
+
+==================================================================
+LobbyGameMode
+-> StartGame
+-> All the post login to check and do the travel.
+
+Create a timer to give a wait time.
+-> Header file
+    -> FTimerHandle GameStartTimer
+
+GetWorldTimerManager().SetTimer(GameStartTimer, this, &ALobbyGameMode::StartGame, 5);
+
+void ALobbyGameMode::StartGame()
+{
+    auto GameInstance = Cast<PuzzlePlatformsGameInstance>(GetGameInstance());
+    if(GameInstance == nullptr) return;
+
+    GameInstance->StartSession();
+
+    UWorld* World = GetWorld();
+    if(!ensure(World != nullptr)) return;
+
+    bUseSeamlessTravel = true;
+    World->ServerTravel("");
+}
+
+
+PuzzlePlatformsGameInstance
+-> Function StartSession
+
+void PuzzlePlatformsGameInstance::StartSession()
+{
+    if(SessionInterface.IsValid())
+    {
+        SessionInterface->StartSession(SESSION_NAME);
+    }
+}

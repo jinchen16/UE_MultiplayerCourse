@@ -47,7 +47,7 @@ void UPuzzlePlatformsGameInstance::Init()
 		{
 			UE_LOG(LogTemp, Warning, TEXT("Found online session"));
 			OnlineSession->OnCreateSessionCompleteDelegates.AddUObject(this, &UPuzzlePlatformsGameInstance::OnCreateSessionComplete);
-			OnlineSession->OnDestroySessionCompleteDelegates.AddUObject(this, &UPuzzlePlatformsGameInstance::OnCreateSessionComplete);
+			OnlineSession->OnDestroySessionCompleteDelegates.AddUObject(this, &UPuzzlePlatformsGameInstance::OnDestroySessionComplete);
 			OnlineSession->OnFindSessionsCompleteDelegates.AddUObject(this, &UPuzzlePlatformsGameInstance::OnFindSessionsComplete);
 			OnlineSession->OnJoinSessionCompleteDelegates.AddUObject(this, &UPuzzlePlatformsGameInstance::OnJoinSessionComplete);
 		}
@@ -55,6 +55,11 @@ void UPuzzlePlatformsGameInstance::Init()
 	else
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Not Found subsystem"));
+	}
+
+	if (GEngine != nullptr)
+	{
+		GEngine->OnNetworkFailure().AddUObject(this, &UPuzzlePlatformsGameInstance::OnNetworkFailure);
 	}
 }
 
@@ -228,4 +233,9 @@ void UPuzzlePlatformsGameInstance::InGameLoadMenu()
 
 	InGameMenu->Setup();
 	InGameMenu->SetMenuInterface(this);
+}
+
+void UPuzzlePlatformsGameInstance::OnNetworkFailure(UWorld* World, UNetDriver* NetDriver, ENetworkFailure::Type FailureType, const FString& ErrorString)
+{
+	LoadMainMenu();
 }

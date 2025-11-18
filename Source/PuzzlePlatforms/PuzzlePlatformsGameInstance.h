@@ -51,4 +51,7 @@ private:
 	void OnFindSessionsComplete(bool Success);
 	void OnJoinSessionComplete(FName SessionName, EOnJoinSessionCompleteResult::Type Result);
 	void CreateSession();
+	void OnNetworkFailure(UWorld* World, UNetDriver* NetDriver, ENetworkFailure::Type FailureType, const FString& ErrorString);
+	
+	FString DesiredServerName;
 };
